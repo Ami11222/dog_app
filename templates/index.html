@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>犬のお出かけプラン</title>
+  <style>
+    body {
+      margin: 10px;
+      font-family: Arial, sans-serif;
+    }
+    input, button, textarea {
+      width: 100%;
+      box-sizing: border-box;
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>犬のお出かけプラン提案</h1>
+  <form method="POST">
+    <input type="text" name="breed" placeholder="犬種" required>
+    <input type="text" name="age" placeholder="年齢" required>
+    <input type="text" name="personality" placeholder="性格 (例：元気／穏やか)" required>
+    <button type="submit">プランを生成</button>
+  </form>
+
+  {% if plan %}
+    <h2>おすすめプラン</h2>
+    <textarea rows="6" readonly>{{ plan }}</textarea>
+  {% endif %}
+</body>
+</html>
+
+
