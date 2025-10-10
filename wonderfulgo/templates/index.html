@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>犬のお出かけプラン</title>
+  <style>
+    body {
+      margin: 10px;
+      font-family: Arial, sans-serif;
+      background-color: #f4f7f6;
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      color: #007bff;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .form-section {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 25px;
+      background-color: #fcfcfc;
+    }
+    .form-section h3 {
+      color: #555;
+      margin-top: 0;
+      margin-bottom: 15px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #444;
+    }
+    input[type="text"], input[type="number"], select, textarea {
+      width: calc(100% - 20px); /* 左右のpaddingを考慮 */
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 1rem;
+    }
+    textarea {
+        min-height: 80px;
+        resize: vertical;
+    }
+    .checkbox-group, .radio-group {
+      margin-bottom: 15px;
+    }
+    .checkbox-group label, .radio-group label {
+      display: inline-block;
+      margin-right: 15px;
+      font-weight: normal;
+    }
+    .checkbox-group input[type="checkbox"], .radio-group input[type="radio"] {
+      width: auto;
+      margin-right: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      margin-top: 20px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result-section {
+      margin-top: 30px;
+      background-color: #e9f7ef;
+      border: 1px solid #cce5dd;
+      border-radius: 8px;
+      padding: 25px;
+    }
+    .result-section h2 {
+      color: #28a745;
+    }
+    pre {
+      background-color: #f0f8f4;
+      padding: 15px;
+      border-radius: 5px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      border: 1px solid #bee5eb;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🐕 犬のお出かけプラン提案 🐾</h1>
+    <form method="POST">
+
+      <!-- 1. わんちゃんの基本情報 -->
+      <div class="form-section">
+        <h3>1. わんちゃんの基本情報</h3>
+        <label for="dog_name">名前:</label>
+        <input type="text" id="dog_name" name="dog_name" placeholder="名前">
+
+        <label for="breed">犬種:</label>
+        <input type="text" id="breed" name="breed" placeholder="犬種" required>
+
+        <label for="gender">性別:</label>
+        <select id="gender" name="gender">
+          <option value="">選択してください</option>
+          <option value="オス">オス</option>
+          <option value="メス">メス</option>
+        </select>
+
+        <label for="age">年齢:</label>
+        <input type="number" id="age" name="age" placeholder="年齢 (歳)" required min="0">
+
+        <label for="weight">体重 (kg):</label>
+        <input type="number" id="weight" name="weight" placeholder="体重 (例: 5.5)" step="0.1" min="0">
+
+        <label for="coat_type">毛の長さ/種類:</label>
+        <input type="text" id="coat_type" name="coat_type" placeholder="例: 短毛、長毛、ダブルコート">
+
+        <label for="neutered_spayed">避妊・去勢の有無:</label>
+        <select id="neutered_spayed" name="neutered_spayed">
+          <option value="">選択してください</option>
+          <option value="あり">あり</option>
+          <option value="なし">なし</option>
+        </select>
+
+        <label for="allergies">アレルギーの有無 (食べ物、環境):</label>
+        <input type="text" id="allergies" name="allergies" placeholder="例: 鶏肉、花粉、なし">
+
+        <label for="medical_history">既往歴・持病の有無:</label>
+        <input type="text" id="medical_history" name="medical_history" placeholder="例: 関節炎、心臓病、なし">
+      </div>
+
+      <!-- 2. わんちゃんの性格・行動特性 -->
+      <div class="form-section">
+        <h3>2. わんちゃんの性格・行動特性</h3>
+        <label for="personality">性格:</label>
+        <input type="text" id="personality" name="personality" placeholder="例: 活発, 人懐っこい, 臆病" required>
+        
+        <label>他の犬との交流:</label>
+        <div class="radio-group">
+          <label><input type="radio" name="dog_interaction" value="積極的に遊ぶ">積極的に遊ぶ</label>
+          <label><input type="radio" name="dog_interaction" value="距離を取る">距離を取る</label>
+          <label><input type="radio" name="dog_interaction" value="苦手">苦手</label>
+        </div>
+
+        <label>人との交流:</label>
+        <div class="radio-group">
+          <label><input type="radio" name="human_interaction" value="人懐っこい">人懐っこい</label>
+          <label><input type="radio" name="human_interaction" value="知らない人は苦手">知らない人は苦手</label>
+        </div>
+
+        <label for="barking_tendency">吠えやすさ:</label>
+        <input type="text" id="barking_tendency" name="barking_tendency" placeholder="例: よく吠える, あまり吠えない">
+
+        <label for="biting_habit">噛み癖の有無:</label>
+        <select id="biting_habit" name="biting_habit">
+          <option value="">選択してください</option>
+          <option value="あり">あり</option>
+          <option value="なし">なし</option>
+        </select>
+
+        <label for="walk_frequency_time">散歩の頻度と時間:</label>
+        <input type="text" id="walk_frequency_time" name="walk_frequency_time" placeholder="例: 1日2回 各30分">
+
+        <label for="exercise_level">運動量:</label>
+        <select id="exercise_level" name="exercise_level">
+          <option value="">選択してください</option>
+          <option value="非常に多い">非常に多い</option>
+          <option value="普通">普通</option>
+          <option value="少ない">少ない</option>
+        </select>
+
+        <label for="likes_water_play">水遊びが好きか:</label>
+        <select id="likes_water_play" name="likes_water_play">
+          <option value="">選択してください</option>
+          <option value="はい">はい</option>
+          <option value="いいえ">いいえ</option>
+        </select>
+
+        <label for="car_sickness">車酔いの有無:</label>
+        <select id="car_sickness" name="car_sickness">
+          <option value="">選択してください</option>
+          <option value="あり">あり</option>
+          <option value="なし">なし</option>
+        </select>
+
+        <label for="can_stay_alone">お留守番の可否と時間:</label>
+        <input type="text" id="can_stay_alone" name="can_stay_alone" placeholder="例: 可 (4時間まで), 不可">
+
+        <label for="training_status">しつけの状況:</label>
+        <input type="text" id="training_status" name="training_status" placeholder="例: 基本的なしつけはできている, 呼び戻し可能">
+      </div>
+
+      <!-- 3. 飼い主さんの情報・希望 -->
+      <div class="form-section">
+        <h3>3. 飼い主さんの情報・希望</h3>
+        <label for="residence">居住地 (都道府県、市区町村):</label>
+        <input type="text" id="residence" name="residence" placeholder="例: 東京都 渋谷区" required>
+
+        <label for="transportation">交通手段:</label>
+        <select id="transportation" name="transportation">
+          <option value="">選択してください</option>
+          <option value="車">車</option>
+          <option value="公共交通機関">公共交通機関</option>
+          <option value="両方">両方</option>
+        </select>
+
+        <label>一緒に行きたい場所のタイプ:</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="place_type" value="ドッグカフェ・レストラン">ドッグカフェ・レストラン</label>
+          <label><input type="checkbox" name="place_type" value="ドッグラン">ドッグラン</label>
+          <label><input type="checkbox" name="place_type" value="公園・広場">公園・広場</label>
+          <label><input type="checkbox" name="place_type" value="ハイキング・トレッキングコース">ハイキング・トレッキングコース</label>
+          <label><input type="checkbox" name="place_type" value="ビーチ・水遊びスポット">ビーチ・水遊びスポット</label>
+          <label><input type="checkbox" name="place_type" value="宿泊施設">宿泊施設 (ホテル、コテージ、キャンプ場など)</label>
+          <label><input type="checkbox" name="place_type" value="観光スポット">観光スポット (テーマパーク、お城など)</label>
+          <label><input type="checkbox" name="place_type" value="イベント">イベント (犬関連イベント、マルシェなど)</label>
+          <label><input type="checkbox" name="place_type" value="その他">その他 (自由記述)</label>
+        </div>
+        <input type="text" name="place_type_other" placeholder="その他の場所のタイプ">
+
+
+        <label for="purpose">お出かけの目的:</label>
+        <input type="text" id="purpose" name="purpose" placeholder="例: 運動させたい, リラックスしたい" required>
+
+        <label for="stay_duration">滞在時間:</label>
+        <select id="stay_duration" name="stay_duration">
+          <option value="">選択してください</option>
+          <option value="半日">半日</option>
+          <option value="1日">1日</option>
+          <option value="宿泊">宿泊</option>
+          <option value="複数日">複数日 (宿泊)</option>
+        </select>
+
+        <label for="budget">予算感:</label>
+        <input type="text" id="budget" name="budget" placeholder="例: 5000円以内, 1万円くらい, 宿泊込みで3万円">
+
+        <label for="companions">同行者の有無と人数:</label>
+        <input type="text" id="companions" name="companions" placeholder="例: 家族3人, 友人1人, なし">
+
+        <label>重視する点 (複数選択可):</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" name="importance" value="わんちゃんが思いっきり遊べる場所">わんちゃんが思いっきり遊べる場所</label>
+          <label><input type="checkbox" name="importance" value="清潔感">清潔感</label>
+          <label><input type="checkbox" name="importance" value="写真映え">写真映え</label>
+          <label><input type="checkbox" name="importance" value="食事の美味しさ">食事の美味しさ</label>
+          <label><input type="checkbox" name="importance" value="アクセスの良さ">アクセスの良さ</label>
+          <label><input type="checkbox" name="importance" value="静かで落ち着ける場所">静かで落ち着ける場所</label>
+          <label><input type="checkbox" name="importance" value="他のわんちゃんと交流できる場所">他のわんちゃんと交流できる場所</label>
+          <label><input type="checkbox" name="importance" value="手ぶらで楽しめる手軽さ">手ぶらで楽しめる手軽さ</label>
+          <label><input type="checkbox" name="importance" value="雨の日でも楽しめる場所">雨の日でも楽しめる場所</label>
+          <label><input type="checkbox" name="importance" value="バリアフリー">バリアフリー</label>
+          <label><input type="checkbox" name="importance" value="その他">その他 (自由記述)</label>
+        </div>
+        <input type="text" name="importance_other" placeholder="その他重視する点">
+      </div>
+
+      <button type="submit">プランを生成</button>
+    </form>
+
+    {% if plan %}
+      <div class="result-section">
+        <h2>🐾 おすすめプラン 🐾</h2>
+        <pre>{{ plan }}</pre>
+      </div>
+    {% endif %}
+  </div>
+</body>
+</html>
