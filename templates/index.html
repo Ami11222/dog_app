@@ -1,35 +1,168 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>犬のお出かけプラン</title>
-  <style>
-    body {
-      margin: 10px;
-      font-family: Arial, sans-serif;
-    }
-    input, button, textarea {
-      width: 100%;
-      box-sizing: border-box;
-      margin: 5px 0;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyPET & Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <h1>犬のお出かけプラン提案</h1>
-  <form method="POST">
-    <input type="text" name="breed" placeholder="犬種" required>
-    <input type="text" name="age" placeholder="年齢" required>
-    <input type="text" name="personality" placeholder="性格 (例：元気／穏やか)" required>
-    <button type="submit">プランを生成</button>
-  </form>
+    <div class="app-container">
+        <!-- MyPET画面 -->
+        <div id="myPetScreen" class="screen active">
+            <header>
+                <h1>MyPET 🐾</h1>
+            </header>
+            <main class="content-area">
+                <!-- MyPETフォーム: actionとmethodはJSで制御するため削除 -->
+                <form id="petInfoForm"> 
+                    <div class="form-section">
+                        <h3>わんちゃんの基本情報</h3>
+                        <label for="dog_name">名前:</label>
+                        <input type="text" id="dog_name" name="dog_name" placeholder="名前">
 
-  {% if plan %}
-    <h2>おすすめプラン</h2>
-    <textarea rows="6" readonly>{{ plan }}</textarea>
-  {% endif %}
+                        <label for="breed">犬種:</label>
+                        <input type="text" id="breed" name="breed" placeholder="犬種" required>
+
+                        <label for="gender">性別:</label>
+                        <select id="gender" name="gender">
+                            <option value="">選択してください</option>
+                            <option value="オス">オス</option>
+                            <option value="メス">メス</option>
+                        </select>
+
+                        <label for="age">年齢:</label>
+                        <input type="number" id="age" name="age" placeholder="年齢 (歳)" required min="0">
+
+                        <label for="weight">体重 (kg):</label>
+                        <input type="number" id="weight" name="weight" placeholder="体重 (例: 5.5)" step="0.1" min="0">
+
+                        <label for="coat_type">毛の長さ/種類:</label>
+                        <input type="text" id="coat_type" name="coat_type" placeholder="例: 短毛、長毛、ダブルコート">
+
+                        <label for="neutered_spayed">避妊・去勢の有無:</label>
+                        <select id="neutered_spayed" name="neutered_spayed">
+                            <option value="">選択してください</option>
+                            <option value="あり">あり</option>
+                            <option value="なし">なし</option>
+                        </select>
+
+                        <label for="allergies">アレルギーの有無 (食べ物、環境):</label>
+                        <input type="text" id="allergies" name="allergies" placeholder="例: 鶏肉、花粉、なし">
+
+                        <label for="medical_history">既往歴・持病の有無:</label>
+                        <input type="text" id="medical_history" name="medical_history" placeholder="例: 関節炎、心臓病、なし">
+                    </div>
+
+                    <div class="form-section">
+                        <h3>わんちゃんの性格・行動特性</h3>
+                        <label for="personality">性格:</label>
+                        <input type="text" id="personality" name="personality" placeholder="例: 活発, 人懐っこい, 臆病" required>
+                        
+                        <label>他の犬との交流:</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="dog_interaction" value="積極的に遊ぶ">積極的に遊ぶ</label>
+                            <label><input type="radio" name="dog_interaction" value="距離を取る">距離を取る</label>
+                            <label><input type="radio" name="dog_interaction" value="苦手">苦手</label>
+                        </div>
+
+                        <label>人との交流:</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="human_interaction" value="人懐っこい">人懐っこい</label>
+                            <label><input type="radio" name="human_interaction" value="知らない人は苦手">知らない人は苦手</label>
+                        </div>
+
+                        <label for="barking_tendency">吠えやすさ:</label>
+                        <input type="text" id="barking_tendency" name="barking_tendency" placeholder="例: よく吠える, あまり吠えない">
+
+                        <label for="biting_habit">噛み癖の有無:</label>
+                        <select id="biting_habit" name="biting_habit">
+                            <option value="">選択してください</option>
+                            <option value="あり">あり</option>
+                            <option value="なし">なし</option>
+                        </select>
+
+                        <label for="walk_frequency_time">散歩の頻度と時間:</label>
+                        <input type="text" id="walk_frequency_time" name="walk_frequency_time" placeholder="例: 1日2回 各30分">
+
+                        <label for="exercise_level">運動量:</label>
+                        <select id="exercise_level" name="exercise_level">
+                            <option value="">選択してください</option>
+                            <option value="非常に多い">非常に多い</option>
+                            <option value="普通">普通</option>
+                            <option value="少ない">少ない</option>
+                        </select>
+
+                        <label for="likes_water_play">水遊びが好きか:</label>
+                        <select id="likes_water_play" name="likes_water_play">
+                            <option value="">選択してください</option>
+                            <option value="はい">はい</option>
+                            <option value="いいえ">いいえ</option>
+                        </select>
+
+                        <label for="car_sickness">車酔いの有無:</label>
+                        <select id="car_sickness" name="car_sickness">
+                            <option value="">選択してください</option>
+                            <option value="あり">あり</option>
+                            <option value="なし">なし</option>
+                        </select>
+
+                        <label for="can_stay_alone">お留守番の可否と時間:</label>
+                        <input type="text" id="can_stay_alone" name="can_stay_alone" placeholder="例: 可 (4時間まで), 不可">
+
+                        <label for="training_status">しつけの状況:</label>
+                        <input type="text" id="training_status" name="training_status" placeholder="例: 基本的なしつけはできている, 呼び戻し可能">
+                    </div>
+
+                    <div class="form-section">
+                        <h3>飼い主さんの情報</h3>
+                        <label for="owner_residence">居住地 (都道府県、市区町村):</label>
+                        <input type="text" id="owner_residence" name="owner_residence" placeholder="例: 東京都 渋谷区" required>
+
+                        <label for="owner_transportation">交通手段:</label>
+                        <select id="owner_transportation" name="owner_transportation">
+                            <option value="">選択してください</option>
+                            <option value="車">車</option>
+                            <option value="公共交通機関">公共交通機関</option>
+                            <option value="両方">両方</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="save-button">情報を保存</button>
+                </form>
+            </main>
+        </div>
+
+        <!-- Chat画面 -->
+        <div id="chatScreen" class="screen">
+            <header>
+                <h1>Chat 💬</h1>
+            </header>
+            <main class="content-area chat-main">
+                <div id="chatMessages" class="chat-messages">
+                    <!-- チャットメッセージがここに追加されます -->
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="chatInput" placeholder="メッセージを入力してください..." class="chat-input">
+                    <button id="sendMessageButton" class="send-button"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </main>
+        </div>
+
+        <!-- フッターナビゲーション -->
+        <nav class="footer-nav">
+            <button class="nav-item active" data-screen="myPetScreen">
+                <i class="fas fa-paw"></i>
+                <span>MyPET</span>
+            </button>
+            <button class="nav-item" data-screen="chatScreen">
+                <i class="fas fa-comments"></i>
+                <span>Chat</span>
+            </button>
+        </nav>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
-
-
