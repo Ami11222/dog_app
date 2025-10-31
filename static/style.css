@@ -1,3 +1,4 @@
+/* --- ベーススタイル --- */
 body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -17,13 +18,13 @@ body {
     background-color: #fff;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     border-radius: 15px;
-    overflow: hidden;
+    overflow: hidden; /* 子要素のはみ出しを隠す */
     display: flex;
     flex-direction: column;
-    position: relative; /* フッターのために必要 */
+    position: relative; /* 子要素のposition:absolute/fixedの基準 */
 }
 
-/* ヘッダー */
+/* --- ヘッダー --- */
 header {
     background-color: #66b3ff;
     color: white;
@@ -32,6 +33,7 @@ header {
     font-size: 1.2rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     z-index: 10;
+    flex-shrink: 0; /* ヘッダーが縮まないように */
 }
 
 header h1 {
@@ -39,11 +41,10 @@ header h1 {
     font-weight: 500;
 }
 
-/* 画面コンテナ */
+/* --- 画面コンテナ (MyPET/Chatのメインコンテンツ) --- */
 .screen {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 20px;
+    flex-grow: 1; /* 残りのスペースを埋める */
+    overflow-y: auto; /* コンテンツがはみ出たらスクロール */
     display: none; /* デフォルトで非表示 */
 }
 
@@ -51,11 +52,28 @@ header h1 {
     display: block; /* アクティブな画面のみ表示 */
 }
 
+/* .content-area は、特定の画面内でさらにパディングを調整する場合に利用 */
+/* Chat画面の .chat-main で padding-bottom を設定しているので、ここでは不要 */
 .content-area {
-    padding-bottom: 70px; /* フッターとの重なりを避けるため */
+    /* ここに共通のheight: 100%やdisplay: flex; flex-direction: column; を置くと */
+    /* MyPET画面のフォーム要素のレイアウトに影響する可能性があります。 */
+    /* 必要であれば個別の画面の .content-area で指定するのがより安全です。 */
+    /* 今回はMyPET画面のpadding-bottomのみを目的とするので、ここでは変更なしで良いでしょう。 */
 }
 
-/* フォーム共通スタイル */
+/* --- MyPET画面固有スタイル --- */
+/* #myPetScreen の content-area を修正 */
+#myPetScreen .content-area {
+    padding: 20px; /* 上下左右の基本パディング */
+    padding-bottom: 80px; /* ★修正: フッターの高さ分を確保★ */
+    box-sizing: border-box; /* パディングを含めて高さを計算 */
+    display: flex; /* flexboxで子要素（プロフィール画像セクション、フォーム）を縦に並べる */
+    flex-direction: column;
+    flex-grow: 1; /* ★追加: 親の.screen内で利用可能なスペースを全て使う★ */
+    /* height: 100%; はflex-grow: 1と重複するため削除 */
+}
+
+/* --- フォーム共通スタイル --- */
 .form-section {
     background-color: #fdfdfd;
     border: 1px solid #e0e0e0;
@@ -63,6 +81,7 @@ header h1 {
     padding: 20px;
     margin-bottom: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    flex-shrink: 0; /* フォームセクションが縮まないように */
 }
 
 .form-section h3 {
@@ -132,6 +151,8 @@ textarea:focus {
     font-weight: 600;
     margin-top: 10px;
     transition: background-color 0.3s, transform 0.2s;
+    flex-shrink: 0; /* ★修正: ボタンが縮まないようにする。form#petInfoForm のflex-direction: column の子要素として★ */
+    margin-bottom: 20px; /* ★追加: ボタンの下にも少し余白があると良いでしょう★ */
 }
 
 .save-button:hover {
@@ -139,54 +160,188 @@ textarea:focus {
     transform: translateY(-2px);
 }
 
-/* チャット画面固有スタイル */
+/* MyPET画面固有スタイル（フォームセクションより下） */
+.profile-image-section {
+    margin-bottom: 20px;
+    flex-shrink: 0; /* プロフィール画像セクションが縮まないように */
+}
+
+.profile-image-upload {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.profile-image-label {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    width: 100px; /* アイコンのサイズ */
+    height: 100px; /* アイコンのサイズ */
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #66b3ff; /* ボーダーを追加 */
+    background-color: #e0e0e0;
+    transition: border-color 0.3s, transform 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.profile-image-label:hover {
+    border-color: #4da6ff;
+    transform: scale(1.03);
+}
+
+.profile-image-circle {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 画像がアイコン内に収まるように */
+    display: block;
+}
+
+.upload-icon {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: #66b3ff;
+    color: white;
+    border-radius: 50%;
+    padding: 6px;
+    font-size: 0.9rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.profile-image-upload p {
+    margin-top: 10px;
+    color: #777;
+    font-size: 0.9rem;
+}
+
+
+/* form#petInfoForm の調整 */
+#petInfoForm {
+    display: flex; /* フォーム内の要素を縦に並べる */
+    flex-direction: column;
+    flex-grow: 1; /* ★追加: 親の.content-area内で利用可能なスペースを全て使う★ */
+    overflow-y: auto; /* ★追加: フォームの中身がはみ出たらスクロールさせる★ */
+    padding-right: 5px; /* ★追加: スクロールバーがフォームの右端に重なるのを防ぐための調整★ */
+}
+
+
+/* --- チャット画面固有スタイル --- */
 .chat-main {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    padding: 0; /* チャットメッセージエリアがpaddingを持つため */
+    height: 100%; /* 親要素(screen)の高さを引き継ぐ */
+    padding-bottom: 60px; /* フッターの高さ分を確保 */
+    box-sizing: border-box; /* paddingを含めて高さを計算 */
 }
 
 .chat-messages {
-    flex-grow: 1;
+    flex-grow: 1; /* メッセージエリアが残りのスペースを占める */
     overflow-y: auto;
-    padding: 20px;
+    padding: 15px 20px; /* 上下左右のパディング調整 */
     display: flex;
     flex-direction: column;
-    gap: 10px; /* メッセージ間のスペース */
-    scroll-behavior: smooth; /* スクロールを滑らかに */
+    gap: 15px; /* メッセージ間のスペース */
+    scroll-behavior: smooth;
+}
+
+.chat-message-wrapper {
+    display: flex;
+    align-items: flex-end; /* メッセージの下部にアイコンを揃える */
+    gap: 10px; /* アイコンとメッセージの間隔 */
+}
+
+.chat-message-wrapper.user {
+    align-self: flex-end; /* ユーザーのメッセージは右寄せ */
+    flex-direction: row-reverse; /* アイコンを右に */
+}
+
+.chat-message-wrapper.ai {
+    align-self: flex-start; /* AIのメッセージは左寄せ */
+    flex-direction: row; /* アイコンを左に */
+}
+
+.chat-message-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    flex-shrink: 0; /* アイコンが縮まないように */
 }
 
 .chat-message {
-    max-width: 80%;
+    max-width: calc(80% - 50px); /* アイコンの幅とgapを考慮 */
     padding: 10px 15px;
     border-radius: 18px;
     line-height: 1.4;
     word-wrap: break-word;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    position: relative; /* 吹き出しの角のため */
 }
 
 .chat-message.user {
-    align-self: flex-end;
-    background-color: #dcf8c6; /* ユーザーのメッセージ */
+    background-color: #dcf8c6;
     color: #333;
-    border-bottom-right-radius: 5px; /* 角を少しだけ調整 */
+    border-bottom-right-radius: 5px;
 }
 
 .chat-message.ai {
-    align-self: flex-start;
-    background-color: #e0e0e0; /* AIのメッセージ */
+    background-color: #e0e0e0;
     color: #333;
-    border-bottom-left-radius: 5px; /* 角を少しだけ調整 */
+    border-bottom-left-radius: 5px;
 }
 
+/* AI返答中のローディングスピナー */
+.loading-spinner {
+    display: flex; /* flexboxで中央揃え */
+    justify-content: center;
+    align-items: center;
+    padding: 10px; /* パディングを調整 */
+    color: #888;
+    font-size: 0.9rem;
+    background-color: #f9f9f9; /* 入力エリアと同じ背景色 */
+    border-top: 1px solid #eee; /* 入力エリアとの境界線 */
+    gap: 8px; /* スピナーとテキストの間隔 */
+    flex-shrink: 0; /* 縮まないようにする */
+}
+
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #66b3ff;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 入力欄のユーザーアイコン */
+.chat-user-icon {
+    width: 35px; /* 入力欄横のアイコンサイズ */
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 8px;
+    border: 1px solid #eee;
+    flex-shrink: 0;
+}
+
+/* 入力エリア */
 .chat-input-area {
     display: flex;
+    align-items: center;
     padding: 10px;
     border-top: 1px solid #eee;
     background-color: #f9f9f9;
-    align-items: center;
-    box-sizing: border-box; /* paddingを含めて幅を計算 */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
+    z-index: 50;
+    flex-shrink: 0; /* 縮まないようにする */
 }
 
 .chat-input {
@@ -196,12 +351,7 @@ textarea:focus {
     padding: 10px 15px;
     margin-right: 10px;
     font-size: 0.95rem;
-}
-
-.chat-input:focus {
-    border-color: #66b3ff;
-    box-shadow: 0 0 0 2px rgba(102, 179, 255, 0.2);
-    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .send-button {
@@ -217,6 +367,7 @@ textarea:focus {
     cursor: pointer;
     font-size: 1.1rem;
     transition: background-color 0.3s, transform 0.2s;
+    flex-shrink: 0; /* 縮まないように */
 }
 
 .send-button:hover {
@@ -224,20 +375,23 @@ textarea:focus {
     transform: scale(1.05);
 }
 
-/* フッターナビゲーション */
+/* --- フッターナビゲーション --- */
 .footer-nav {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    width: 100%;
+    width: 100%; /* ビューポートの幅を基準とする */
+    max-width: 500px; /* app-container の max-width に合わせる */
     background-color: #f8f8f8;
     border-top: 1px solid #eee;
     padding: 8px 0;
-    position: absolute;
+    position: fixed; /* 画面下部に固定 */
     bottom: 0;
-    left: 0;
+    left: 50%; /* 画面中央に配置開始 */
+    transform: translateX(-50%); /* 自身の幅の半分だけ左に戻して中央揃え */
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
     z-index: 100;
+    flex-shrink: 0; /* フッターが縮まないように */
 }
 
 .nav-item {
@@ -266,6 +420,7 @@ textarea:focus {
     color: #4da6ff;
 }
 
+/* --- その他のスタイル --- */
 /* スクロールバーのスタイル（任意） */
 ::-webkit-scrollbar {
     width: 8px;
@@ -284,10 +439,20 @@ textarea:focus {
     background: #555;
 }
 
-/* レスポンシブ対応 (今回は最大幅を500pxに設定しているので、あまり必要ないかもしれませんが念のため) */
+/* レスポンシブ対応 */
 @media (max-width: 600px) {
+    body {
+        /* スマートフォンでは app-container の中央配置を解除 */
+        align-items: stretch; /* 左右いっぱいに広がるように */
+    }
     .app-container {
-        border-radius: 0;
+        border-radius: 0; /* 角丸をなくす */
         height: 100vh;
+        max-height: unset; /* 高さの最大値を解除 */
+        max-width: 100%; /* 画面幅いっぱいに広げる */
+    }
+    .footer-nav {
+        max-width: 100%; /* 画面幅いっぱいに広げる */
+        border-radius: 0; /* フッターの角丸をなくす（必要なら） */
     }
 }

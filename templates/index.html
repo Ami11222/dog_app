@@ -9,14 +9,25 @@
 </head>
 <body>
     <div class="app-container">
-        <!-- MyPET画面 -->
+        <!-- MyPET画面 (変更なし) -->
         <div id="myPetScreen" class="screen active">
             <header>
                 <h1>MyPET 🐾</h1>
             </header>
             <main class="content-area">
-                <!-- MyPETフォーム: actionとmethodはJSで制御するため削除 -->
+                <div class="form-section profile-image-section">
+                    <h3>プロフィール画像</h3>
+                    <div class="profile-image-upload">
+                        <label for="profile-image-input" class="profile-image-label">
+                            <img id="profile-image-preview" src="/static/default-user.png" alt="プロフィール画像" class="profile-image-circle">
+                            <i class="fas fa-camera upload-icon"></i>
+                        </label>
+                        <input type="file" id="profile-image-input" accept="image/*" style="display: none;">
+                        <p>クリックして画像をアップロード</p>
+                    </div>
+                </div>
                 <form id="petInfoForm"> 
+                    <!-- ... わんちゃんの基本情報、性格・行動特性、飼い主さんの情報 (変更なし) ... -->
                     <div class="form-section">
                         <h3>わんちゃんの基本情報</h3>
                         <label for="dog_name">名前:</label>
@@ -51,9 +62,15 @@
                         <label for="allergies">アレルギーの有無 (食べ物、環境):</label>
                         <input type="text" id="allergies" name="allergies" placeholder="例: 鶏肉、花粉、なし">
 
-                        <label for="medical_history">既往歴・持病の有無:</label>
+                        <label for="medical_history">持病の有無:</label>
                         <input type="text" id="medical_history" name="medical_history" placeholder="例: 関節炎、心臓病、なし">
+
+                        <label for="others">備考:</label>
+                        <input type="text" id="others" name="others">
                     </div>
+                    
+
+                    
 
                     <div class="form-section">
                         <h3>わんちゃんの性格・行動特性</h3>
@@ -89,7 +106,7 @@
                         <label for="exercise_level">運動量:</label>
                         <select id="exercise_level" name="exercise_level">
                             <option value="">選択してください</option>
-                            <option value="非常に多い">非常に多い</option>
+                            <option value="非常に多い">多い</option>
                             <option value="普通">普通</option>
                             <option value="少ない">少ない</option>
                         </select>
@@ -120,13 +137,12 @@
                         <label for="owner_residence">居住地 (都道府県、市区町村):</label>
                         <input type="text" id="owner_residence" name="owner_residence" placeholder="例: 東京都 渋谷区" required>
 
-                        <label for="owner_transportation">交通手段:</label>
-                        <select id="owner_transportation" name="owner_transportation">
-                            <option value="">選択してください</option>
-                            <option value="車">車</option>
-                            <option value="公共交通機関">公共交通機関</option>
-                            <option value="両方">両方</option>
-                        </select>
+                        <label>移動手段 (複数選択可能):</label>
+                        <div class="checkbox-group" id="owner_transportation_options">
+                          <label><input type="checkbox" name="owner_transportation" value="車"> 車</label>
+                          <label><input type="checkbox" name="owner_transportation" value="公共交通機関"> 公共交通機関</label>
+                          <label><input type="checkbox" name="owner_transportation" value="徒歩"> 徒歩</label>
+                        </div>                  
                     </div>
                     
                     <button type="submit" class="save-button">情報を保存</button>
@@ -143,14 +159,20 @@
                 <div id="chatMessages" class="chat-messages">
                     <!-- チャットメッセージがここに追加されます -->
                 </div>
+                <!-- AI返答中のローディングスピナーを、メッセージエリアと入力エリアの間に追加 -->
+                <div class="loading-spinner" id="loading-spinner" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>AIが返信を作成中...</p> <!-- テキストも追加 -->
+                </div>
                 <div class="chat-input-area">
+                    <img id="userChatIcon" src="/static/default-user.png" alt="ユーザーアイコン" class="chat-user-icon">
                     <input type="text" id="chatInput" placeholder="メッセージを入力してください..." class="chat-input">
                     <button id="sendMessageButton" class="send-button"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </main>
         </div>
 
-        <!-- フッターナビゲーション -->
+        <!-- フッターナビゲーション (変更なし) -->
         <nav class="footer-nav">
             <button class="nav-item active" data-screen="myPetScreen">
                 <i class="fas fa-paw"></i>
